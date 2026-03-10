@@ -1,3 +1,4 @@
+'use client'
 import FadeIn from './FadeIn'
 
 const steps = [

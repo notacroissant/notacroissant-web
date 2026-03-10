@@ -1,4 +1,3 @@
-'use client'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import Story from '@/components/Story'
