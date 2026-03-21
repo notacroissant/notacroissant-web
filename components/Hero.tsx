@@ -1,116 +1,322 @@
 'use client'
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 
 export default function Hero() {
   const bgRef = useRef<HTMLDivElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const sectionRef = useRef<HTMLElement>(null)
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  })
+
+  const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.62, 0.88])
+  const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '28%'])
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
+  const contentScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.94])
+  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12])
+  const grainOpacity = useTransform(scrollYProgress, [0, 0.5], [0.035, 0.06])
 
   useEffect(() => {
     const onScroll = () => {
-      if (bgRef.current) bgRef.current.style.transform = `translateY(${window.scrollY * 0.35}px)`
+      if (bgRef.current) bgRef.current.style.transform = `translateY(${window.scrollY * 0.38}px)`
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  const clipReveal = {
+    initial: { clipPath: 'inset(100% 0 0 0)' },
+    animate: { clipPath: 'inset(0% 0 0 0)' },
+  }
+
+  const blurReveal = {
+    initial: { opacity: 0, filter: 'blur(12px)', y: 16 },
+    animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
+  }
+
+  const slideUp = (delay: number) => ({
+    initial: { opacity: 0, y: '110%' },
+    animate: { opacity: 1, y: '0%' },
+    transition: { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] },
+  })
+
+  const scaleIn = (delay: number, scale = 0.82) => ({
+    initial: { opacity: 0, scale },
+    animate: { opacity: 1, scale: 1 },
+    transition: { duration: 1.0, delay, ease: [0.16, 1, 0.3, 1] as [number,number,number,number] },
+  })
+
   return (
-    <section id="hero" style={{ position: 'relative', height: '100vh', minHeight: '620px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
-      {/* Parallax bg */}
-      <div ref={bgRef} style={{ position: 'absolute', inset: '-10%', willChange: 'transform' }}>
+    <section id="hero" ref={sectionRef} style={{ position: 'relative', height: '100vh', minHeight: '620px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+      {/* ── Video layer ── */}
+      <video
+        ref={videoRef}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="auto"
+        style={{
+          position: 'absolute',
+          inset: '-10%',
+          width: '120%',
+          height: '120%',
+          objectFit: 'cover',
+          objectPosition: 'center',
+          zIndex: 0,
+        }}
+      >
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-shot-of-the-inside-of-a-mixer-when-mixing-50037-large.mp4" type="video/mp4" />
+        <source src="https://videos.pexels.com/video-files/3191588/3191588-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+      </video>
+
+      {/* ── Grain texture ── */}
+      <motion.div style={{
+        position: 'absolute',
+        inset: 0,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+        zIndex: 1,
+        pointerEvents: 'none',
+        opacity: grainOpacity,
+      }} />
+
+      {/* ── Parallax image layer ── */}
+      <motion.div ref={bgRef} style={{ position: 'absolute', inset: '-10%', scale: bgScale, willChange: 'transform', zIndex: 2 }}>
         <Image src="/hero.jpg" alt="Medialuna" fill style={{ objectFit: 'cover' }} priority />
-      </div>
+      </motion.div>
 
-      {/* Dark overlay */}
-      <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(73,0,0,0.72) 0%, rgba(20,0,0,0.55) 60%, rgba(0,0,0,0.35) 100%)' }} />
+      {/* ── Cinematic color grade overlay ── */}
+      <motion.div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(160deg, rgba(73,0,0,0.82) 0%, rgba(20,0,0,0.66) 55%, rgba(0,0,0,0.46) 100%)',
+        opacity: overlayOpacity,
+        zIndex: 3,
+      }} />
 
-      {/* Content */}
-      <div style={{ position: 'relative', zIndex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '0 1.5rem', gap: '1.5rem' }}>
+      {/* ── Vignette ── */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'radial-gradient(ellipse at center, transparent 35%, rgba(0,0,0,0.6) 100%)',
+        zIndex: 3,
+        pointerEvents: 'none',
+      }} />
 
-        {/* Badge */}
+      {/* ── Light sweep ── */}
+      <div style={{
+        position: 'absolute',
+        inset: 0,
+        background: 'linear-gradient(105deg, transparent 30%, rgba(246,221,190,0.05) 50%, transparent 70%)',
+        zIndex: 3,
+        animation: 'lightSweep 9s ease-in-out infinite',
+        pointerEvents: 'none',
+      }} />
+
+      {/* ── Content ── */}
+      <motion.div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          padding: '0 1.5rem',
+          gap: '1.5rem',
+          y: contentY,
+          opacity: contentOpacity,
+          scale: contentScale,
+        }}
+      >
+        {/* Badge — dramatic entrance */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.1, ease: [0.22,1,0.36,1] }}
-          style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 1.1rem', borderRadius: '99px', border: '1px solid rgba(246,221,190,0.3)', background: 'rgba(255,255,255,0.1)', backdropFilter: 'blur(6px)', color: '#f6ddbe', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.15em', textTransform: 'uppercase' }}
+          initial={{ opacity: 0, y: 20, scale: 0.88, filter: 'blur(8px)' }}
+          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
+          transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            padding: '0.4rem 1.1rem',
+            borderRadius: '99px',
+            border: '1px solid rgba(246,221,190,0.3)',
+            background: 'rgba(255,255,255,0.08)',
+            backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            color: '#f6ddbe',
+            fontSize: '0.65rem',
+            fontWeight: 700,
+            letterSpacing: '0.15em',
+            textTransform: 'uppercase',
+          }}
         >
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#4ade80', boxShadow: '0 0 0 0 rgba(74,222,128,0.4)', animation: 'pulse 2s infinite', display: 'inline-block' }} />
+          <span style={{
+            width: '6px',
+            height: '6px',
+            borderRadius: '50%',
+            background: '#4ade80',
+            boxShadow: '0 0 0 0 rgba(74,222,128,0.4)',
+            animation: 'pulse 2s infinite',
+            display: 'inline-block',
+          }} />
           Pre-orders open — DM us on Instagram
         </motion.div>
 
-        {/* Logo */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.92, y: 16 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.2, ease: [0.22,1,0.36,1] }}
-        >
+        {/* Logo — cinematic drop-in */}
+        <motion.div {...scaleIn(0.18, 0.85)}>
           <Image src="/logo.png" alt="Not a Croissant™" width={180} height={70} style={{ filter: 'brightness(0) invert(1)' }} />
         </motion.div>
 
-        {/* H1 */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.35, ease: [0.22,1,0.36,1] }}
-          style={{ fontFamily: 'var(--font-montserrat-var), sans-serif', fontWeight: 800, color: '#fff', fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', lineHeight: 1.05, letterSpacing: '-0.02em', margin: 0 }}
-        >
-          Not a croissant.<br/>Better.
-        </motion.h1>
+        {/* H1 — epic clip-path reveal per word */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          <div style={{ overflow: 'hidden' }}>
+            <motion.h1 {...slideUp(0.42)} style={{
+              fontFamily: 'var(--font-montserrat-var), sans-serif',
+              fontWeight: 800,
+              color: '#fff',
+              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              margin: 0,
+            }}>
+              Not a croissant.
+            </motion.h1>
+          </div>
+          <div style={{ overflow: 'hidden' }}>
+            <motion.h1 {...slideUp(0.56)} style={{
+              fontFamily: 'var(--font-montserrat-var), sans-serif',
+              fontWeight: 800,
+              color: '#f6ddbe',
+              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+              lineHeight: 1.05,
+              letterSpacing: '-0.02em',
+              margin: 0,
+            }}>
+              Better.
+            </motion.h1>
+          </div>
+        </div>
 
-        {/* Subtitle */}
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.5, ease: [0.22,1,0.36,1] }}
-          style={{ fontFamily: 'var(--font-playfair-var), serif', fontStyle: 'italic', color: 'rgba(246,221,190,0.9)', fontSize: 'clamp(1rem, 2.5vw, 1.3rem)', margin: 0 }}
-        >
+        {/* Subtitle — cinematic blur-in */}
+        <motion.p {...blurReveal} transition={{ duration: 1.2, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} style={{
+          fontFamily: 'var(--font-playfair-var), serif',
+          fontStyle: 'italic',
+          color: 'rgba(246,221,190,0.88)',
+          fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+          margin: 0,
+        }}>
           Our own medialuna, made in New York.
         </motion.p>
 
-        {/* CTAs */}
+        {/* CTAs — staggered scale-in */}
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.65, ease: [0.22,1,0.36,1] }}
-          style={{ display: 'flex', gap: '0.875rem', flexWrap: 'wrap', justifyContent: 'center' }}
+          initial={{ opacity: 0, y: 30, scale: 0.92 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.9, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
+          style={{
+            display: 'flex',
+            gap: '0.875rem',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            marginTop: '0.5rem',
+          }}
         >
           <a
             href="https://instagram.com/notacroissantnyc"
             target="_blank"
             rel="noopener"
-            style={{ padding: '0.9rem 2.2rem', background: '#f6ddbe', color: '#490000', fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '3px', transition: 'all 0.2s ease' }}
-            onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 30px rgba(0,0,0,0.2)'; }}
-            onMouseLeave={e => { e.currentTarget.style.transform = ''; e.currentTarget.style.boxShadow = ''; }}
+            style={{
+              padding: '0.9rem 2.2rem',
+              background: '#f6ddbe',
+              color: '#490000',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              borderRadius: '3px',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)'
+              e.currentTarget.style.boxShadow = '0 16px 40px rgba(0,0,0,0.3)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.transform = ''
+              e.currentTarget.style.boxShadow = ''
+            }}
           >
             Pre-order via DM
           </a>
           <a
             href="#how"
-            style={{ padding: '0.9rem 2.2rem', border: '1.5px solid rgba(255,255,255,0.5)', color: '#fff', fontWeight: 700, fontSize: '0.78rem', letterSpacing: '0.1em', textTransform: 'uppercase', textDecoration: 'none', borderRadius: '3px', transition: 'all 0.2s ease' }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = '#fff'; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'; e.currentTarget.style.transform = ''; }}
+            style={{
+              padding: '0.9rem 2.2rem',
+              border: '1.5px solid rgba(255,255,255,0.5)',
+              color: '#fff',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              borderRadius: '3px',
+              transition: 'all 0.2s ease',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = '#fff'
+              e.currentTarget.style.transform = 'translateY(-3px)'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'rgba(255,255,255,0.5)'
+              e.currentTarget.style.transform = ''
+            }}
           >
             How it works
           </a>
         </motion.div>
-      </div>
+      </motion.div>
 
-      {/* Scroll arrow */}
-      <a href="#story" style={{ position: 'absolute', bottom: '2.5rem', left: '50%', transform: 'translateX(-50%)', color: 'rgba(246,221,190,0.5)', transition: 'color 0.2s', animation: 'bounce 2.5s infinite', zIndex: 1 }}>
+      {/* ── Scroll indicator ── */}
+      <motion.a
+        href="#story"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.4, duration: 1 }}
+        style={{
+          position: 'absolute',
+          bottom: '2.5rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          color: 'rgba(246,221,190,0.45)',
+          transition: 'color 0.2s',
+          animation: 'bounce 2.5s infinite',
+          zIndex: 10,
+        }}
+      >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <polyline points="6 9 12 15 18 9"/>
         </svg>
-      </a>
+      </motion.a>
 
       <style>{`
         @keyframes bounce {
           0%, 100% { transform: translateX(-50%) translateY(0); }
-          50% { transform: translateX(-50%) translateY(8px); }
+          50% { transform: translateX(-50%) translateY(9px); }
         }
         @keyframes pulse {
           0% { box-shadow: 0 0 0 0 rgba(74,222,128,0.5); }
-          70% { box-shadow: 0 0 0 8px rgba(74,222,128,0); }
+          70% { box-shadow: 0 0 0 9px rgba(74,222,128,0); }
           100% { box-shadow: 0 0 0 0 rgba(74,222,128,0); }
+        }
+        @keyframes lightSweep {
+          0% { transform: translateX(-100%) skewX(-15deg); opacity: 0; }
+          50% { opacity: 1; }
+          100% { transform: translateX(200%) skewX(-15deg); opacity: 0; }
         }
       `}</style>
     </section>

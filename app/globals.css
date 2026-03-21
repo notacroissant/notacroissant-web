@@ -14,10 +14,38 @@
   --font-playfair: var(--font-playfair-var);
 }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   background: #faf8f5;
   color: #111110;
   overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #1c1c1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #490000;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #6b0000;
+}
+
+/* Smooth focus states */
+:focus-visible {
+  outline: 2px solid #490000;
+  outline-offset: 3px;
+}
+
+/* Image loading placeholder */
+img {
+  transition: opacity 0.3s ease;
 }
