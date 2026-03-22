@@ -34,7 +34,7 @@ export default function Order() {
   }
 
   return (
-    <section id="order" style={{ background: C.champagne, padding: '5rem 0', overflow: 'hidden', position: 'relative' }}>
+    <section id="order" style={{ background: C.champagne, padding: '3rem 0', overflow: 'hidden', position: 'relative' }}>
       {/* Ambient glow top */}
       <div style={{
         position: 'absolute',

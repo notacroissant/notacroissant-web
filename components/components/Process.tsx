@@ -23,7 +23,7 @@ export default function Process() {
     <section id="process" style={{ background: '#490000', position: 'relative', overflow: 'hidden' }}>
 
       {/* Wrapper: max-width + grid */}
-      <div style={{ maxWidth: '1180px', margin: '0 auto', padding: '5rem 1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center', minHeight: '80vh' }}>
+      <div style={{ maxWidth: '1180px', margin: '0 auto', padding: '3rem 1.5rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '4rem', alignItems: 'center', minHeight: '80vh' }}>
 
         {/* ── Left: Text ── */}
         <StaggerContainer style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0', position: 'relative', zIndex: 2 }} staggerDelay={0.14} type="up">
