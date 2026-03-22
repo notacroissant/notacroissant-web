@@ -13,40 +13,34 @@
   --font-playfair: var(--font-playfair-var);
 }
 
-/* Root - allow natural scrolling, only block horizontal overflow */
 html {
   scroll-behavior: smooth;
 }
 
-/* Body - natural overflow for vertical scroll */
 body {
   background: #faf8f5;
   color: #111110;
   -webkit-text-size-adjust: 100%;
   min-height: 100vh;
   min-height: 100dvh;
+  /* Only block horizontal scroll, allow vertical */
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-/* Box sizing for all elements */
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* Allow natural page scrolling - only prevent horizontal overflow at element level */
-div, section, main {
+/* Every section and container: no horizontal overflow */
+section, main, div, header, footer, nav {
   max-width: 100%;
-}
-
-/* Horizontal overflow hidden where needed - NOT on body/html */
-.overflow-x-hidden {
   overflow-x: hidden;
 }
 
-/* Touch scrolling for iOS */
-@supports (-webkit-touch-callout: none) {
-  body {
-    min-height: -webkit-fill-available;
-  }
+/* iOS momentum scrolling */
+body {
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Custom scrollbar */
