@@ -25,7 +25,7 @@ export default function Process() {
       {/* ── Left: Text ── */}
       <StaggerContainer style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '0', position: 'relative', zIndex: 2 }} staggerDelay={0.14} type="up">
         <AnimateIn style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }} type="up" delay={0}>
-          <span style={{ fontSize: '0.67rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(246,221,190,0.55)', fontFamily: 'var(--font-montserrat-var), sans-serif' }}>
+          <span style={{ fontSize: '0.67rem', fontWeight: 700, letterSpacing: '0.22em', textTransform: 'uppercase', color: 'rgba(246,221,190,0.9)', fontFamily: 'var(--font-montserrat-var), sans-serif' }}>
             The Process
           </span>
 
