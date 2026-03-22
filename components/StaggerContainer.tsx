@@ -1,6 +1,6 @@
 'use client'
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 interface StaggerContainerProps {
   children: React.ReactNode
@@ -28,8 +28,6 @@ export default function StaggerContainer({
   margin = '-60px',
 }: StaggerContainerProps) {
   const ref = useRef(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const inView = useInView(ref, { once, margin: margin as any })
 
   const getChildVariants = (index: number) => {
     const initial = (() => {
@@ -42,7 +40,7 @@ export default function StaggerContainer({
       }
     })()
 
-    const animate = (() => {
+    const whileInView = (() => {
       switch (type) {
         case 'up':     return { opacity: 1, y: 0 }
         case 'scale':  return { opacity: 1, scale: 1 }
@@ -54,7 +52,8 @@ export default function StaggerContainer({
 
     return {
       initial,
-      animate: inView ? animate : initial,
+      whileInView,
+      viewport: { once, margin: typeof margin === 'string' ? margin : `${margin}px` },
       transition: { duration, delay: delay + index * staggerDelay, ease },
     }
   }

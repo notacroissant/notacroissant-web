@@ -1,5 +1,4 @@
 'use client'
-import { useInView } from 'framer-motion'
 import { useRef } from 'react'
 import { motion } from 'framer-motion'
 
@@ -13,7 +12,6 @@ interface FadeInProps {
 
 export default function FadeIn({ children, className = '', style, delay = 0, direction = 'up' }: FadeInProps) {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-60px' })
 
   const initial = {
     opacity: 0,
@@ -27,7 +25,8 @@ export default function FadeIn({ children, className = '', style, delay = 0, dir
       className={className}
       style={style}
       initial={initial}
-      animate={inView ? { opacity: 1, y: 0, x: 0 } : initial}
+      whileInView={{ opacity: 1, y: 0, x: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}

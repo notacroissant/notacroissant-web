@@ -1,6 +1,6 @@
 'use client'
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 interface AnimateInProps {
   children: React.ReactNode
@@ -13,7 +13,6 @@ interface AnimateInProps {
   once?: boolean
   margin?: string | number
   amount?: number
-  hiddenScaleX?: boolean
 }
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -28,11 +27,8 @@ export default function AnimateIn({
   once = true,
   margin = '-80px',
   amount = 0.2,
-  hiddenScaleX = false,
 }: AnimateInProps) {
   const ref = useRef(null)
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const inView = useInView(ref, { once, margin: margin as any, amount })
 
   const getInitial = () => {
     switch (type) {
@@ -51,7 +47,7 @@ export default function AnimateIn({
     }
   }
 
-  const getAnimate = () => {
+  const getWhileInView = () => {
     switch (type) {
       case 'up':      return { opacity: 1, y: 0 }
       case 'down':    return { opacity: 1, y: 0 }
@@ -69,7 +65,7 @@ export default function AnimateIn({
   }
 
   const initial = getInitial()
-  const animate = inView ? getAnimate() : initial
+  const whileInView = getWhileInView()
 
   return (
     <motion.div
@@ -77,7 +73,8 @@ export default function AnimateIn({
       className={className}
       style={style}
       initial={initial}
-      animate={animate}
+      whileInView={whileInView}
+      viewport={{ once, margin: typeof margin === 'number' ? `${margin}px` : margin, amount }}
       transition={{ duration, delay, ease }}
     >
       {children}
