@@ -62,9 +62,9 @@ export default function Hero() {
         preload="auto"
         style={{
           position: 'absolute',
-          inset: '-10%',
-          width: '120%',
-          height: '120%',
+          inset: 0,
+          width: '100%',
+          height: '100%',
           objectFit: 'cover',
           objectPosition: 'center',
           zIndex: 0,
@@ -85,7 +85,7 @@ export default function Hero() {
       }} />
 
       {/* ── Parallax image layer ── */}
-      <motion.div ref={bgRef} style={{ position: 'absolute', inset: '-10%', scale: bgScale, willChange: 'transform', zIndex: 2 }}>
+      <motion.div ref={bgRef} style={{ position: 'absolute', inset: 0, scale: bgScale, willChange: 'transform', zIndex: 2 }}>
         <Image src="/hero.jpg" alt="Medialuna" fill style={{ objectFit: 'cover' }} priority />
       </motion.div>
 
