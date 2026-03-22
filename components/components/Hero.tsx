@@ -15,8 +15,6 @@ export default function Hero() {
 
   const overlayOpacity = useTransform(scrollYProgress, [0, 1], [0.62, 0.88])
   const contentY = useTransform(scrollYProgress, [0, 1], ['0%', '28%'])
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.55], [1, 0])
-  const contentScale = useTransform(scrollYProgress, [0, 0.6], [1, 0.94])
   const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12])
   const grainOpacity = useTransform(scrollYProgress, [0, 0.5], [0.035, 0.06])
 
@@ -28,27 +26,9 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const clipReveal = {
-    initial: { clipPath: 'inset(100% 0 0 0)' },
-    animate: { clipPath: 'inset(0% 0 0 0)' },
-  }
-
-  const blurReveal = {
-    initial: { opacity: 0, filter: 'blur(12px)', y: 16 },
-    animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
-  }
-
-  const slideUp = (delay: number) => ({
-    initial: { opacity: 0, y: '110%' },
-    animate: { opacity: 1, y: '0%' },
-    transition: { duration: 1.1, delay, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] },
-  })
-
-  const scaleIn = (delay: number, scale = 0.82) => ({
-    initial: { opacity: 0, scale },
-    animate: { opacity: 1, scale: 1 },
-    transition: { duration: 1.0, delay, ease: [0.16, 1, 0.3, 1] as [number,number,number,number] },
-  })
+  // Content always visible - no scroll-based hiding
+  const contentOpacity = 1
+  const contentScale = 1
 
   return (
     <section id="hero" ref={sectionRef} style={{ position: 'relative', height: '100vh', minHeight: '620px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', paddingTop: 'env(safe-area-inset-top)', touchAction: 'pan-y' }}>
@@ -71,7 +51,6 @@ export default function Hero() {
         }}
       >
         <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-shot-of-the-inside-of-a-mixer-when-mixing-50037-large.mp4" type="video/mp4" />
-        <source src="" type="video/mp4" />
       </video>
 
       {/* ── Grain texture ── */}
@@ -133,12 +112,8 @@ export default function Hero() {
           scale: contentScale,
         }}
       >
-        {/* Badge — dramatic entrance */}
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.88, filter: 'blur(8px)' }}
-          animate={{ opacity: 1, y: 0, scale: 1, filter: 'blur(0px)' }}
-          transition={{ duration: 0.9, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
-          style={{
+        {/* Badge — visible immediately */}
+        <motion.div style={{
             display: 'flex',
             alignItems: 'center',
             gap: '0.5rem',
@@ -167,58 +142,60 @@ export default function Hero() {
           Pre-orders open — DM us on Instagram
         </motion.div>
 
-        {/* Logo — cinematic drop-in */}
-        <motion.div {...scaleIn(0.18, 0.85)}>
+        {/* Logo — visible immediately */}
+        <motion.div>
           <Image src="/logo.png" alt="Not a Croissant™" width={180} height={70} style={{ filter: 'brightness(0) invert(1)' }} />
         </motion.div>
 
-        {/* H1 — epic clip-path reveal per word */}
+        {/* H1 — visible immediately */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
           <div style={{ overflow: 'hidden' }}>
-            <motion.h1 {...slideUp(0.42)} style={{
-              fontFamily: 'var(--font-montserrat-var), sans-serif',
-              fontWeight: 800,
-              color: '#fff',
-              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              margin: 0,
-            }}>
+            <motion.h1
+              style={{
+                fontFamily: 'var(--font-montserrat-var), sans-serif',
+                fontWeight: 800,
+                color: '#fff',
+                fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.02em',
+                margin: 0,
+              }}
+            >
               Not a croissant.
             </motion.h1>
           </div>
           <div style={{ overflow: 'hidden' }}>
-            <motion.h1 {...slideUp(0.56)} style={{
-              fontFamily: 'var(--font-montserrat-var), sans-serif',
-              fontWeight: 800,
-              color: '#f6ddbe',
-              fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-              lineHeight: 1.05,
-              letterSpacing: '-0.02em',
-              margin: 0,
-            }}>
+            <motion.h1
+              style={{
+                fontFamily: 'var(--font-montserrat-var), sans-serif',
+                fontWeight: 800,
+                color: '#f6ddbe',
+                fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+                lineHeight: 1.05,
+                letterSpacing: '-0.02em',
+                margin: 0,
+              }}
+            >
               Better.
             </motion.h1>
           </div>
         </div>
 
-        {/* Subtitle — cinematic blur-in */}
-        <motion.p {...blurReveal} transition={{ duration: 1.2, delay: 0.78, ease: [0.22, 1, 0.36, 1] }} style={{
-          fontFamily: 'var(--font-playfair-var), serif',
-          fontStyle: 'italic',
-          color: 'rgba(246,221,190,0.88)',
-          fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
-          margin: 0,
-        }}>
+        {/* Subtitle — visible immediately */}
+        <motion.p
+          style={{
+            fontFamily: 'var(--font-playfair-var), serif',
+            fontStyle: 'italic',
+            color: 'rgba(246,221,190,0.88)',
+            fontSize: 'clamp(1rem, 2.5vw, 1.3rem)',
+            margin: 0,
+          }}
+        >
           Our own medialuna, made in New York.
         </motion.p>
 
-        {/* CTAs — staggered scale-in */}
-        <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.92 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
-          style={{
+        {/* CTAs — visible immediately */}
+        <motion.div style={{
             display: 'flex',
             gap: '0.875rem',
             flexWrap: 'wrap',
@@ -284,9 +261,6 @@ export default function Hero() {
       {/* ── Scroll indicator ── */}
       <motion.a
         href="#story"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.4, duration: 1 }}
         style={{
           position: 'absolute',
           bottom: 'max(2.5rem, env(safe-area-inset-bottom))',
