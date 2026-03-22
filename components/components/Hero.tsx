@@ -71,7 +71,7 @@ export default function Hero() {
         }}
       >
         <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-shot-of-the-inside-of-a-mixer-when-mixing-50037-large.mp4" type="video/mp4" />
-        <source src="https://videos.pexels.com/video-files/3191588/3191588-uhd_2560_1440_30fps.mp4" type="video/mp4" />
+        <source src="" type="video/mp4" />
       </video>
 
       {/* ── Grain texture ── */}
