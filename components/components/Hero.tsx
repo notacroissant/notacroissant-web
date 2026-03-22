@@ -51,7 +51,7 @@ export default function Hero() {
   })
 
   return (
-    <section id="hero" ref={sectionRef} style={{ position: 'relative', height: '100vh', minHeight: '620px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', paddingTop: 'env(safe-area-inset-top)' }}>
+    <section id="hero" ref={sectionRef} style={{ position: 'relative', height: '100vh', minHeight: '620px', display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden', paddingTop: 'env(safe-area-inset-top)', touchAction: 'pan-y' }}>
       {/* ── Video layer ── */}
       <video
         ref={videoRef}
