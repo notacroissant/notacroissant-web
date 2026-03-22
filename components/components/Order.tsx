@@ -126,21 +126,21 @@ export default function Order() {
                 <span>✓</span> You&apos;re on the list. We&apos;ll be in touch.
               </div>
             ) : (
-              <form onSubmit={handleSubmit} style={{ display: 'flex', border: `1px solid rgba(73,0,0,0.2)`, borderRadius: '3px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
+              <form onSubmit={handleSubmit} style={{ display: 'flex', flexWrap: 'wrap', border: `1px solid rgba(73,0,0,0.2)`, borderRadius: '3px', overflow: 'hidden', boxShadow: '0 2px 12px rgba(0,0,0,0.08)' }}>
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="your@email.com"
                   required
-                  style={{ flex: 1, padding: '0.875rem 1.25rem', fontSize: '0.875rem', background: 'rgba(255,255,255,0.75)', border: 'none', outline: 'none', fontFamily: 'var(--font-montserrat-var), sans-serif', color: '#111110', transition: 'background 0.2s' }}
+                  style={{ flex: '1 1 200px', minWidth: '140px', padding: '0.875rem 1.25rem', fontSize: '0.875rem', background: 'rgba(255,255,255,0.75)', border: 'none', outline: 'none', fontFamily: 'var(--font-montserrat-var), sans-serif', color: '#111110', transition: 'background 0.2s' }}
                   onFocus={e => (e.currentTarget.style.background = '#fff')}
                   onBlur={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.75)')}
                 />
                 <button
                   type="submit"
                   disabled={loading}
-                  style={{ padding: '0.875rem 1.25rem', background: C.mahogany, color: C.champagne, fontFamily: 'var(--font-montserrat-var), sans-serif', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s' }}
+                  style={{ flex: '0 0 auto', minWidth: '100px', padding: '0.875rem 1.25rem', background: C.mahogany, color: C.champagne, fontFamily: 'var(--font-montserrat-var), sans-serif', fontWeight: 700, fontSize: '0.72rem', letterSpacing: '0.12em', textTransform: 'uppercase', border: 'none', cursor: 'pointer', whiteSpace: 'nowrap', opacity: loading ? 0.6 : 1, transition: 'opacity 0.2s', minHeight: '44px' }}
                 >
                   {loading ? '…' : 'Notify me'}
                 </button>

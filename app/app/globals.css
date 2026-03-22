@@ -23,18 +23,24 @@ body {
   -webkit-text-size-adjust: 100%;
   min-height: 100vh;
   min-height: 100dvh;
-  /* Only block horizontal scroll, allow vertical */
-  overflow-x: hidden;
-  overflow-y: auto;
+  /* Allow natural overflow - no overflow-x:hidden on body */
 }
 
 *, *::before, *::after {
   box-sizing: border-box;
 }
 
-/* Every section and container: no horizontal overflow */
-section, main, div, header, footer, nav {
+/* Sections and main container - prevent horizontal overflow */
+main, section {
   max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Specific containers that need overflow control */
+.nav-menu,
+.mobile-menu,
+.overlay,
+.parallax-container {
   overflow-x: hidden;
 }
 
@@ -73,17 +79,5 @@ img {
 @media (max-width: 768px) {
   input, textarea, select {
     font-size: 16px !important;
-  }
-}
-
-/* Footer mobile layout */
-@media (max-width: 640px) {
-  footer > div {
-    grid-template-columns: 1fr !important;
-    text-align: center !important;
-    justify-items: center !important;
-  }
-  footer nav {
-    gap: 1.25rem !important;
   }
 }
