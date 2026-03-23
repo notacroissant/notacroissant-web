@@ -5,6 +5,8 @@ import Process from '@/components/Process'
 import HowItWorks from '@/components/HowItWorks'
 import Testimonial from '@/components/Testimonial'
 import Order from '@/components/Order'
+import Waitlist from '@/components/Waitlist'
+import FAQ from '@/components/FAQ'
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -17,6 +19,8 @@ export default function Home() {
       <HowItWorks />
       <Testimonial />
       <Order />
+      <Waitlist />
+      <FAQ />
       <Footer />
     </main>
   )
