@@ -84,7 +84,26 @@ export default function Order() {
   const handleSubmit = async () => {
     if (!isValid) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 1200));
+    const formData = new FormData();
+formData.append("name", contact.name);
+formData.append("email", contact.email);
+formData.append("phone", contact.phone || "N/A");
+formData.append("date", date);
+formData.append("fulfillment", delivery);
+formData.append("address", address || "N/A");
+formData.append("notes", notes || "N/A");
+formData.append("order", items.filter(i => i.type).map(i =>
+  i.type === "ddl"
+    ? `${i.qty} dulce de leche unit${i.qty > 1 ? "s" : ""} (fresh)`
+    : `${i.qty} dozen${i.qty > 1 ? "s" : ""} tradicionales (${i.frozen ? "frozen" : "fresh"})`
+).join(", "));
+
+await fetch("https://formspree.io/f/xreynqap", {
+  method: "POST",
+  body: formData,
+  headers: { Accept: "application/json" },
+});
+
     setLoading(false);
     setSubmitted(true);
   };
