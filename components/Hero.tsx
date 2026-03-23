@@ -164,7 +164,7 @@ export default function Hero() {
             animation: 'pulse 2s infinite',
             display: 'inline-block',
           }} />
-          Pre-orders open — DM us on Instagram
+          Pre-orders open
         </motion.div>
 
         {/* Logo — cinematic drop-in */}
@@ -227,7 +227,7 @@ export default function Hero() {
           }}
         >
           <a
-            href="https://instagram.com/notacroissantnyc"
+            href="#order"
             target="_blank"
             rel="noopener"
             style={{
@@ -251,7 +251,7 @@ export default function Hero() {
               e.currentTarget.style.boxShadow = ''
             }}
           >
-            Pre-order via DM
+            Pre-order now
           </a>
           <a
             href="#how"
