@@ -84,25 +84,34 @@ export default function Order() {
   const handleSubmit = async () => {
     if (!isValid) return;
     setLoading(true);
-    const formData = new FormData();
-formData.append("name", contact.name);
-formData.append("email", contact.email);
-formData.append("phone", contact.phone || "N/A");
-formData.append("date", date);
-formData.append("fulfillment", delivery);
-formData.append("address", address || "N/A");
-formData.append("notes", notes || "N/A");
-formData.append("order", items.filter(i => i.type).map(i =>
+   
+
+const orderSummary = items.filter(i => i.type).map(i =>
   i.type === "ddl"
     ? `${i.qty} dulce de leche unit${i.qty > 1 ? "s" : ""} (fresh)`
     : `${i.qty} dozen${i.qty > 1 ? "s" : ""} tradicionales (${i.frozen ? "frozen" : "fresh"})`
-).join(", "));
+).join(", ");
 
-await fetch("https://formspree.io/f/xreynqap", {
+await fetch("https://api.web3forms.com/submit", {
   method: "POST",
-  body: formData,
-  headers: { Accept: "application/json" },
+  headers: { "Content-Type": "application/json", Accept: "application/json" },
+  body: JSON.stringify({
+    access_key: "3fafd8fd-0684-4b5f-ac50-5efb49598cee",
+    subject: `New pre-order from ${contact.name}`,
+    from_name: "Not a Croissant™",
+    replyto: contact.email,
+    name: contact.name,
+    email: contact.email,
+    phone: contact.phone || "N/A",
+    order: orderSummary,
+    date: date,
+    fulfillment: delivery,
+    address: delivery === "delivery" ? address : "Pickup",
+    notes: notes || "N/A",
+  }),
 });
+
+
 
     setLoading(false);
     setSubmitted(true);
