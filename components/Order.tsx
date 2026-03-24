@@ -114,8 +114,11 @@ await fetch("https://api.web3forms.com/submit", {
 
 
     setLoading(false);
-    setSubmitted(true);
-  };
+setSubmitted(true);
+setTimeout(() => {
+  document.getElementById("order")?.scrollIntoView({ behavior: "smooth", block: "start" });
+}, 100);
+
 
   const totalDDL = items.filter(i => i.type === "ddl").reduce((s, i) => s + i.qty, 0);
   const totalFresh = items.filter(i => i.type === "trad" && !i.frozen).reduce((s, i) => s + i.qty, 0);
