@@ -28,7 +28,7 @@ export default function Process() {
         {/* ── Left: Image ── */}
         <div ref={imgRef} style={{ position: 'relative', overflow: 'hidden', minHeight: '280px' }} className="process-img-col">
           <motion.div style={{ position: 'absolute', inset: '-8%', y: imgY, willChange: 'transform' }}>
-            <Image src="/process.jpeg" alt="Dough being prepared" fill style={{ objectFit: 'cover', filter: 'brightness(0.65) saturate(0.8)' }} />
+            <Image src="/process.JPEG" alt="Dough being prepared" fill style={{ objectFit: 'cover', filter: 'brightness(0.65) saturate(0.8)' }} />
           </motion.div>
           {/* Gradient fade right side */}
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, transparent 40%, rgba(73,0,0,0.6) 100%)', zIndex: 1 }} />
