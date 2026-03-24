@@ -1,26 +1,36 @@
 "use client";
-import { useState } from "react";
-
-const MAILCHIMP_URL = "https://notacroissant.us16.list-manage.com/subscribe/post?u=dabdc0199473af2bdbc47335e&id=c88748c5a3&f_id=00a0c2e1f0";
+import { useState, useRef } from "react";
 
 export default function Waitlist() {
   const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "done">("idle");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const handleSubmit = async () => {
+  const handleSubmit = () => {
     if (!email) return;
     setStatus("loading");
-    try {
-      const url = `${MAILCHIMP_URL}&EMAIL=${encodeURIComponent(email)}`;
-      await fetch(url, { method: "GET", mode: "no-cors" });
-      setStatus("done");
-    } catch {
-      setStatus("done"); // no-cors siempre resuelve, asumimos éxito
-    }
+    formRef.current?.submit();
+    setTimeout(() => setStatus("done"), 1500);
   };
 
   return (
     <section id="waitlist" style={{ background: "#6B1A2A", padding: "6rem 1.5rem", textAlign: "center" }}>
+
+      {/* iframe oculto — Mailchimp redirige acá */}
+      <iframe name="mc-iframe" style={{ display: "none" }} />
+
+      {/* Form real de Mailchimp — oculto, lo submiteamos via JS */}
+      <form
+        ref={formRef}
+        action="https://notacroissant.us16.list-manage.com/subscribe/post?u=dabdc0199473af2bdbc47335e&id=c88748c5a3&f_id=00a0c2e1f0"
+        method="POST"
+        target="mc-iframe"
+        style={{ display: "none" }}
+      >
+        <input type="email" name="EMAIL" value={email} readOnly />
+        <input type="text" name="b_dabdc0199473af2bdbc47335e_c88748c5a3" defaultValue="" />
+      </form>
+
       <p style={{
         fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem",
         letterSpacing: "0.2em", textTransform: "uppercase",
@@ -44,11 +54,9 @@ export default function Waitlist() {
 
       {status === "done" ? (
         <div style={{
-          background: "rgba(245,239,224,0.1)",
-          border: "1px solid rgba(245,239,224,0.2)",
-          borderRadius: 4, padding: "1.25rem 2rem",
-          color: "#F5EFE0", maxWidth: 440,
-          margin: "0 auto", fontSize: "0.9rem", lineHeight: 1.6,
+          background: "rgba(245,239,224,0.1)", border: "1px solid rgba(245,239,224,0.2)",
+          borderRadius: 4, padding: "1.25rem 2rem", color: "#F5EFE0",
+          maxWidth: 440, margin: "0 auto", fontSize: "0.9rem", lineHeight: 1.6,
         }}>
           ✓ You're on the list. We'll be in touch when regular orders open.
         </div>
