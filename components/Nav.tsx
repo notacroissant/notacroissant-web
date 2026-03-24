@@ -43,7 +43,7 @@ export default function Nav() {
         transition: "all 0.4s ease",
       }}>
         <a href="#hero" style={{ textDecoration: "none" }}>
-  <img src="/logo.png" alt="Not a Croissant™" style={{ height: "32px", width: "auto", filter: scrolled || menuOpen ? "none" : "brightness(0) invert(1)" }} />
+  <img src="/logo.png" alt="Not a Croissant™" style={{ height: "44px", width: "auto", filter: scrolled || menuOpen ? "none" : "brightness(0) invert(1)" }} />
 </a>
 
 
