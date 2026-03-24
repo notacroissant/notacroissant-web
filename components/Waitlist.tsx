@@ -98,7 +98,7 @@ export default function Waitlist() {
             fontSize: "0.72rem", color: "rgba(245,239,224,0.35)",
             marginTop: "1rem", letterSpacing: "0.05em"
           }}>
-            No spam. Unsubscribe anytime.
+            By subscribing you agree to receive marketing emails. You can unsubscribe at any time.
           </p>
         </div>
       )}
