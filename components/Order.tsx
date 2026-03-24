@@ -84,41 +84,35 @@ export default function Order() {
   const handleSubmit = async () => {
     if (!isValid) return;
     setLoading(true);
-   
-
-const orderSummary = items.filter(i => i.type).map(i =>
-  i.type === "ddl"
-    ? `${i.qty} dulce de leche unit${i.qty > 1 ? "s" : ""} (fresh)`
-    : `${i.qty} dozen${i.qty > 1 ? "s" : ""} tradicionales (${i.frozen ? "frozen" : "fresh"})`
-).join(", ");
-
-await fetch("https://api.web3forms.com/submit", {
-  method: "POST",
-  headers: { "Content-Type": "application/json", Accept: "application/json" },
-  body: JSON.stringify({
-    access_key: "3fafd8fd-0684-4b5f-ac50-5efb49598cee",
-    subject: `New pre-order from ${contact.name}`,
-    from_name: "Not a Croissant™",
-    replyto: contact.email,
-    name: contact.name,
-    email: contact.email,
-    phone: contact.phone || "N/A",
-    order: orderSummary,
-    date: date,
-    fulfillment: delivery,
-    address: delivery === "delivery" ? address : "Pickup",
-    notes: notes || "N/A",
-  }),
-});
-
-
-
+    const orderSummary = items.filter(i => i.type).map(i =>
+      i.type === "ddl"
+        ? `${i.qty} dulce de leche unit${i.qty > 1 ? "s" : ""} (fresh)`
+        : `${i.qty} dozen${i.qty > 1 ? "s" : ""} tradicionales (${i.frozen ? "frozen" : "fresh"})`
+    ).join(", ");
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({
+        access_key: "3fafd8fd-0684-4b5f-ac50-5efb49598cee",
+        subject: `New pre-order from ${contact.name}`,
+        from_name: "Not a Croissant™",
+        replyto: contact.email,
+        name: contact.name,
+        email: contact.email,
+        phone: contact.phone || "N/A",
+        order: orderSummary,
+        date: date,
+        fulfillment: delivery,
+        address: delivery === "delivery" ? address : "Pickup",
+        notes: notes || "N/A",
+      }),
+    });
     setLoading(false);
-setSubmitted(true);
-setTimeout(() => {
-  document.getElementById("order")?.scrollIntoView({ behavior: "smooth", block: "start" });
-}, 100);
-
+    setSubmitted(true);
+    setTimeout(() => {
+      document.getElementById("order")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }, 100);
+  };
 
   const totalDDL = items.filter(i => i.type === "ddl").reduce((s, i) => s + i.qty, 0);
   const totalFresh = items.filter(i => i.type === "trad" && !i.frozen).reduce((s, i) => s + i.qty, 0);
@@ -138,12 +132,9 @@ setTimeout(() => {
           .order-form-row { grid-template-columns: 1fr !important; }
         }
       `}</style>
-
       <section id="order" style={{ padding: "5rem 1.5rem", background: "#EDE4CE" }}>
         <div style={{ maxWidth: 1100, margin: "0 auto" }}>
           <div className="order-grid">
-
-            {/* Left info */}
             <div>
               <p style={{ fontFamily: "var(--font-mono, monospace)", fontSize: "0.7rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "#6B1A2A", marginBottom: "1rem" }}>Place your order</p>
               <h2 style={{ fontFamily: "var(--font-display, serif)", fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 900, lineHeight: 1.05, color: "#1C1410" }}>Want one?<br />Let's talk.</h2>
@@ -165,20 +156,17 @@ setTimeout(() => {
                 ))}
               </div>
             </div>
-
-            {/* Right form */}
             <div style={{ background: "white", padding: "2rem", borderRadius: 2, boxShadow: "0 2px 40px rgba(28,20,16,0.08)" }}>
               {submitted ? (
                 <div style={{ textAlign: "center", padding: "3rem 1rem" }}>
                   <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🥐</div>
                   <h3 style={{ fontFamily: "var(--font-display, serif)", fontSize: "1.8rem", color: "#1C1410", marginBottom: "0.5rem" }}>Order received.</h3>
-                  <p style={{ color: "#6B5B4E", fontSize: "0.9rem", lineHeight: 1.6 }}>We'll confirm your order and {delivery === "delivery" ? "delivery" : "pickup"} details within a few hours.</p>
+                  <p style={{ color: "#6B5B4E", fontSize: "0.9rem", lineHeight: 1.6 }}>We'll confirm your order and {delivery === "delivery" ? "delivery" : "pickup"} details within a few hours. Check your email for confirmation.</p>
                 </div>
               ) : (
                 <>
                   <h3 style={{ fontFamily: "var(--font-display, serif)", fontSize: "1.5rem", fontWeight: 700, color: "#1C1410", marginBottom: "0.4rem" }}>Pre-order</h3>
                   <p style={{ fontSize: "0.85rem", color: "#6B5B4E", marginBottom: "1.5rem" }}>We'll confirm everything personally. No bots.</p>
-
                   <div className="order-form-row">
                     <div style={{ marginBottom: "1rem" }}>
                       <label style={lbl}>Name</label>
@@ -189,23 +177,18 @@ setTimeout(() => {
                       <input name="email" type="email" value={contact.email} onChange={handleContact} placeholder="you@email.com" style={inp} />
                     </div>
                   </div>
-
                   <div style={{ marginBottom: "1rem" }}>
                     <label style={lbl}>Phone (optional)</label>
                     <input name="phone" value={contact.phone} onChange={handleContact} placeholder="+1 (917) 000-0000" style={inp} />
                   </div>
-
                   <div style={{ borderTop: "1px solid #E8E0D0", margin: "1rem 0" }} />
                   <div style={{ fontSize: "0.75rem", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, color: "#6B5B4E", marginBottom: "0.75rem" }}>What would you like?</div>
-
                   {items.map((item, idx) => (
                     <OrderLineItem key={idx} item={item} index={idx} onChange={handleItemChange} onRemove={removeItem} canRemove={items.length > 1} />
                   ))}
-
                   <button onClick={addItem} style={{ background: "none", border: "1px dashed #C8BEA8", borderRadius: 2, width: "100%", padding: "0.7rem", cursor: "pointer", color: "#6B5B4E", fontSize: "0.82rem", fontFamily: "inherit", marginBottom: "1rem" }}>
                     + Add another product
                   </button>
-
                   {hasItems && (
                     <div style={{ background: "rgba(107,26,42,0.05)", border: "1px solid rgba(107,26,42,0.15)", borderRadius: 2, padding: "1rem", marginBottom: "1rem", fontSize: "0.82rem", lineHeight: 1.8 }}>
                       <div style={{ fontWeight: 500, color: "#6B1A2A", fontSize: "0.7rem", letterSpacing: "0.1em", textTransform: "uppercase" as const, marginBottom: "0.4rem" }}>Order summary</div>
@@ -215,15 +198,12 @@ setTimeout(() => {
                       <div style={{ marginTop: "0.5rem", color: "#6B5B4E", fontSize: "0.75rem" }}>Pricing confirmed when we coordinate.</div>
                     </div>
                   )}
-
                   <div style={{ borderTop: "1px solid #E8E0D0", margin: "1rem 0" }} />
-
                   <div style={{ marginBottom: "1rem" }}>
                     <label style={lbl}>Preferred date</label>
                     <input type="date" value={date} min={minDate} onChange={e => setDate(e.target.value)} style={inp} />
                   </div>
                   <p style={{ fontSize: "0.78rem", color: "#6B5B4E", marginTop: "-0.75rem", marginBottom: "1rem" }}>⚠ We need at least 72 hours. We'll confirm availability.</p>
-
                   <div style={{ marginBottom: "1rem" }}>
                     <label style={lbl}>Fulfillment</label>
                     <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.5rem" }}>
@@ -235,7 +215,6 @@ setTimeout(() => {
                       ))}
                     </div>
                   </div>
-
                   {delivery === "delivery" && (
                     <>
                       <div style={{ marginBottom: "1rem" }}>
@@ -245,13 +224,11 @@ setTimeout(() => {
                       <p style={{ fontSize: "0.78rem", color: "#6B1A2A", marginTop: "-0.75rem", marginBottom: "1rem" }}>Delivery subject to confirmation based on date & quantity.</p>
                     </>
                   )}
-
                   <div style={{ marginBottom: "1rem" }}>
                     <label style={lbl}>Notes (optional)</label>
                     <textarea value={notes} onChange={e => setNotes(e.target.value)} placeholder="Allergies, special requests, event info..."
                       style={{ ...inp, resize: "vertical" as const, minHeight: 80 }} />
                   </div>
-
                   <button onClick={handleSubmit} disabled={loading || !isValid}
                     style={{ width: "100%", background: !isValid ? "#C8BEA8" : "#6B1A2A", color: "#F5EFE0", padding: "1rem", fontFamily: "inherit", fontSize: "0.85rem", fontWeight: 500, letterSpacing: "0.08em", textTransform: "uppercase" as const, border: "none", cursor: !isValid ? "not-allowed" : "pointer", borderRadius: 2 }}>
                     {loading ? "Sending..." : "Place pre-order →"}
