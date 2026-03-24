@@ -167,10 +167,7 @@ export default function Hero() {
           Pre-orders open
         </motion.div>
 
-        {/* Logo — cinematic drop-in */}
-        <motion.div {...scaleIn(0.18, 0.85)}>
-          <Image src="/logo.png" alt="Not a Croissant™" width={180} height={70} style={{ filter: 'brightness(0) invert(1)' }} />
-        </motion.div>
+        
 
         {/* H1 — epic clip-path reveal per word */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
@@ -215,7 +212,7 @@ export default function Hero() {
 
         {/* CTAs — staggered scale-in */}
         <motion.div
-          initial={{ opacity: 0, y: 30, scale: 0.92 }}
+          initial={{ opacity: 0, y: 20, scale: 0.88, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ duration: 0.9, delay: 0.92, ease: [0.22, 1, 0.36, 1] }}
           style={{
