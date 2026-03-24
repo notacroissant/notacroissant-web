@@ -21,7 +21,11 @@ export default function Footer() {
 
           {/* Logo + tagline */}
           <div style={{ display: "flex", flexDirection: "column" as const, gap: "1rem", maxWidth: 280 }}>
-            <img src="/logo.png" alt="Not a Croissant™" style={{ height: 40, width: "auto", filter: "brightness(0) invert(1)" }} />
+            <img
+              src="/logo-light.png"
+              alt="Not a Croissant™"
+              style={{ width: 160, height: "auto", maxWidth: "100%", display: "block" }}
+            />
             <p style={{ fontSize: "0.85rem", color: "rgba(245,239,224,0.45)", lineHeight: 1.7, fontFamily: "var(--font-display, serif)", fontStyle: "italic", margin: 0 }}>
               Medialunas, made in New York.<br />72 hours. By hand. No shortcuts.
             </p>
