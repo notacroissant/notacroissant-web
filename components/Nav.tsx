@@ -42,9 +42,10 @@ export default function Nav() {
         borderBottom: scrolled || menuOpen ? "1px solid rgba(107,26,42,0.1)" : "none",
         transition: "all 0.4s ease",
       }}>
-        <a href="#hero" style={{ fontFamily: "var(--font-display, serif)", fontSize: "1rem", fontWeight: 700, color: logoColor, textDecoration: "none" }}>
-          Not a Croissant™
-        </a>
+        <a href="#hero" style={{ textDecoration: "none" }}>
+  <img src="/logo.png" alt="Not a Croissant™" style={{ height: "32px", width: "auto", filter: scrolled || menuOpen ? "none" : "brightness(0) invert(1)" }} />
+</a>
+
 
         {/* Desktop */}
         <ul className="nav-links-desktop" style={{ gap: "1.5rem", listStyle: "none", margin: 0, padding: 0, alignItems: "center" }}>
